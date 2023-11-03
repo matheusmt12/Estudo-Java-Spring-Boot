@@ -1,16 +1,23 @@
 package com.matheusmt.pvd.pvd.entity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Getter
-@Setter
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
+@Entity
+@Table(name = "user")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(length = 100, nullable = false)
     private String name;
     private boolean isEnabled;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Sale> sales;
 
 }
