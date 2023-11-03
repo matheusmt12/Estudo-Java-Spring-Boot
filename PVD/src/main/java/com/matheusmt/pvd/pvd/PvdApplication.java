@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+@RestController
+@RequestMapping("/")
 @SpringBootApplication
 public class PvdApplication {
 
@@ -16,9 +17,10 @@ public class PvdApplication {
     }
 
 
-    public void teste(){
-        User u = new User();
+    @GetMapping("/hello")
+    public String teste(){
 
+        return  "Hello world";
 
     }
 
