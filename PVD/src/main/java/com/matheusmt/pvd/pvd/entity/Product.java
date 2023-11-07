@@ -28,4 +28,8 @@ public class Product {
 
     @OneToMany(mappedBy = "product",fetch = FetchType.EAGER)
     private List<ItemSale> itemSales;
+
+
+
+
 }

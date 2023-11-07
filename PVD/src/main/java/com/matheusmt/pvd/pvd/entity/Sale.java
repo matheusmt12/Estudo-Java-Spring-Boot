@@ -18,8 +18,8 @@ public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private LocalDate saleDate;
+    @Column(nullable = false,name = "sale_date")
+    private LocalDate date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
