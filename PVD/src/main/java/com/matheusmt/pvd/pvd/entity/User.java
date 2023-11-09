@@ -19,9 +19,7 @@ public class User {
 
     private boolean isEnabled;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user")
     private List<Sale> sales;
-
-
 
 }

@@ -20,7 +20,7 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity get(){
+    public ResponseEntity getAll(){
         try {
             return new ResponseEntity<>(iProductRepository.findAll(),HttpStatus.OK);
         }catch (Exception e){

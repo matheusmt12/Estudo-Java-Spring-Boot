@@ -36,11 +36,20 @@ public class SaleController {
     @GetMapping
     public ResponseEntity get(){
         try {
-            return new ResponseEntity<>(iSalesRepository.findAll(),HttpStatus.OK);
+            return new ResponseEntity<>(saleService.findAll(),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>("Erro do server", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity get(@PathVariable Long id){
+        try {
+            return new ResponseEntity<>(saleService.getById(id),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
