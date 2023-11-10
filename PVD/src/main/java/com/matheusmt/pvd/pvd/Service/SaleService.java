@@ -4,6 +4,8 @@ import com.matheusmt.pvd.pvd.DTO.ProductDTO;
 import com.matheusmt.pvd.pvd.DTO.ProductDTOInfo;
 import com.matheusmt.pvd.pvd.DTO.SaleDTO;
 import com.matheusmt.pvd.pvd.DTO.SaleInfoDTO;
+import com.matheusmt.pvd.pvd.Exceptions.InvaledOperationException;
+import com.matheusmt.pvd.pvd.Exceptions.NoItemException;
 import com.matheusmt.pvd.pvd.Repository.IItemSalesRepository;
 import com.matheusmt.pvd.pvd.Repository.IProductRepository;
 import com.matheusmt.pvd.pvd.Repository.ISalesRepository;
@@ -60,7 +62,8 @@ public class SaleService {
     }
 
     public SaleInfoDTO getById(Long id){
-        Sale sale = iSalesRepository.findById(id).get();
+        Sale sale = iSalesRepository.findById(id).orElseThrow(() ->
+                new NoItemException("Venda não encontrada"));
         return getSaleInfo(sale);
 
     }
@@ -68,7 +71,8 @@ public class SaleService {
 
     public Long save(SaleDTO sale){
 
-        User user = iUserRepository.findById(sale.getUserid()).get();
+        User user = iUserRepository.findById(sale.getUserid()).orElseThrow(() ->
+                new NoItemException("Não ha usário cadastrado"));
 
         Sale newSale = new Sale();
 
@@ -97,8 +101,12 @@ public class SaleService {
             ItemSale itemSale = new ItemSale();
             itemSale.setProduct(product);
 
-            if(product.getQuantity() == 0 || product.getQuantity() < item.getQuantity()) {
-                throw new IllegalArgumentException();
+            if(product.getQuantity() == 0) {
+                throw new NoItemException("Acabou o estoque do produto:" + product.getDescription());
+            }
+            else if(product.getQuantity() < item.getQuantity()){
+                throw new InvaledOperationException(String.format("A quantidade de itens dispiníveis (%s)" +
+                        "é menor do que a quantidade desejada (%s)",product.getQuantity(),item.getQuantity()));
             }
 
             itemSale.setQuantity(item.getQuantity());
