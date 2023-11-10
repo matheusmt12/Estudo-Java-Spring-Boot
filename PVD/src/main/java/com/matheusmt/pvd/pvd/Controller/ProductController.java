@@ -21,11 +21,7 @@ public class ProductController {
 
     @GetMapping()
     public ResponseEntity getAll(){
-        try {
-            return new ResponseEntity<>(iProductRepository.findAll(),HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(iProductRepository.findAll(), HttpStatus.OK);
     }
 
     @PostMapping()

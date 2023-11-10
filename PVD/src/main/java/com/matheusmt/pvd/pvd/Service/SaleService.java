@@ -17,9 +17,11 @@ import com.matheusmt.pvd.pvd.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,25 +42,24 @@ public class SaleService {
     }
 
     private SaleInfoDTO getSaleInfo(Sale sale) {
-        SaleInfoDTO saleInfoDTO = new SaleInfoDTO();
 
-        saleInfoDTO.setUsername(sale.getUser().getName());
-        saleInfoDTO.setDate(sale.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        saleInfoDTO.setProducts(getProoductsInfo(sale.getItemSales()));
-
-        return saleInfoDTO;
+        return SaleInfoDTO.builder()
+                .username(sale.getUser().getName())
+                .date(sale.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                .products(getProoductsInfo(sale.getItemSales())).build();
 
     }
 
     private List<ProductDTOInfo> getProoductsInfo(List<ItemSale> itemSales) {
-        return itemSales.stream().map(item -> {
-            ProductDTOInfo productDTOInfo = new ProductDTOInfo();
+        if(CollectionUtils.isEmpty(itemSales)){
+            return Collections.emptyList();
+        }
+        return itemSales.stream().map(
+                item -> ProductDTOInfo.builder()
+                    .description(item.getProduct().getDescription())
+                    .quantity(item.getQuantity()).build()
 
-            productDTOInfo.setDescription(item.getProduct().getDescription());
-            productDTOInfo.setQuantity(item.getQuantity());
-            return productDTOInfo;
-
-        }).collect(Collectors.toList());
+        ).collect(Collectors.toList());
     }
 
     public SaleInfoDTO getById(Long id){

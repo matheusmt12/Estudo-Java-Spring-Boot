@@ -26,8 +26,6 @@ public class Product {
     @Column(nullable = false)
     private int quantity;
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.EAGER)
-    private List<ItemSale> itemSales;
 
 
 

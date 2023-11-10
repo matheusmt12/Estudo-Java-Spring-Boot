@@ -46,7 +46,7 @@ public class SaleController {
     @GetMapping
     public ResponseEntity get(){
         try {
-            return new ResponseEntity<>(new ResponseDTO<List<SaleInfoDTO>>(" ",saleService.findAll()),HttpStatus.OK);
+            return new ResponseEntity<>(saleService.findAll(),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>("Erro do server", HttpStatus.INTERNAL_SERVER_ERROR);
         }

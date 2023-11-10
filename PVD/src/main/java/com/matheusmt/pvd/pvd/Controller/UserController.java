@@ -1,10 +1,12 @@
 package com.matheusmt.pvd.pvd.Controller;
 
 
+import com.matheusmt.pvd.pvd.DTO.ResponseDTO;
 import com.matheusmt.pvd.pvd.DTO.UserDTO;
 import com.matheusmt.pvd.pvd.Repository.IUserRepository;
 import com.matheusmt.pvd.pvd.Service.UserService;
 import com.matheusmt.pvd.pvd.entity.User;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity insert(@RequestBody User user) {
+    public ResponseEntity insert(@Valid @RequestBody User user) {
         try {
             user.setEnabled(true);
             return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
@@ -42,7 +44,7 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity update(@RequestBody User user) {
+    public ResponseEntity update(@Valid @RequestBody User user) {
         try {
             UserDTO userDto = userService.findById(user.getId());
             return new ResponseEntity<>(userDto,HttpStatus.OK);
@@ -58,7 +60,7 @@ public class UserController {
         try{
             UserDTO userDTO = userService.findById(id);
             userService.deleteById(id);
-            return new ResponseEntity("O usuario :" + userDTO.getName() +" foi removido com sucesso" ,HttpStatus.OK);
+            return new ResponseEntity(new ResponseDTO("Usuario removido com sucesso¹"),HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

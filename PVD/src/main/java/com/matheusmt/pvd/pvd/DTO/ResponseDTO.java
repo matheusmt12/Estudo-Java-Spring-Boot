@@ -9,16 +9,13 @@ public class ResponseDTO<T> {
 
     @Getter
     private List<String> menssages;
-    @Getter
-    private T data;
 
-    public ResponseDTO(List<String> menssages, T data) {
+    public ResponseDTO(List<String> menssages) {
         this.menssages = menssages;
-        this.data = data;
     }
 
-    public ResponseDTO(String menssages, T dada) {
+    public ResponseDTO(String menssages) {
         this.menssages = Arrays.asList(menssages);
-        this.data = dada;
+
     }
 }
