@@ -1,7 +1,9 @@
 package com.matheusmt.pvd.pvd.Controller;
 
+import com.matheusmt.pvd.pvd.DTO.ProductDTO;
 import com.matheusmt.pvd.pvd.Repository.IProductRepository;
 import com.matheusmt.pvd.pvd.entity.Product;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +16,10 @@ import java.util.Optional;
 public class ProductController {
 
     private IProductRepository iProductRepository;
-
+    private ModelMapper mapper;
     public ProductController(@Autowired IProductRepository iProductRepository) {
         this.iProductRepository = iProductRepository;
+        this.mapper = new ModelMapper();
     }
 
     @GetMapping()
@@ -25,21 +28,23 @@ public class ProductController {
     }
 
     @PostMapping()
-    public ResponseEntity post(@RequestBody Product product){
+    public ResponseEntity post(@RequestBody ProductDTO product){
         try{
-            return new ResponseEntity<>(iProductRepository.save(product), HttpStatus.CREATED);
+            return new ResponseEntity<>(iProductRepository.save(mapper.map(product,Product.class)), HttpStatus.CREATED);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping()
-    public ResponseEntity put(@RequestBody Product product){
+    public ResponseEntity put(@RequestBody ProductDTO product){
 
         try {
-            Optional<Product> optional = iProductRepository.findById(product.getId());
+            Product prod = mapper.map(product,Product.class);
+            Optional<Product> optional = iProductRepository.findById(prod.getId());
             if (optional.isPresent()){
-                return new ResponseEntity<>(product,HttpStatus.OK);
+
+                return new ResponseEntity<>(iProductRepository.save(prod),HttpStatus.OK);
             }
             return ResponseEntity.notFound().build();
 

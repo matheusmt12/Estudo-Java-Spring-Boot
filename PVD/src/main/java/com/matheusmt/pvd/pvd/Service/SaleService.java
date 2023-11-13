@@ -1,6 +1,6 @@
 package com.matheusmt.pvd.pvd.Service;
 
-import com.matheusmt.pvd.pvd.DTO.ProductDTO;
+import com.matheusmt.pvd.pvd.DTO.ProductSaleDTO;
 import com.matheusmt.pvd.pvd.DTO.ProductDTOInfo;
 import com.matheusmt.pvd.pvd.DTO.SaleDTO;
 import com.matheusmt.pvd.pvd.DTO.SaleInfoDTO;
@@ -14,7 +14,6 @@ import com.matheusmt.pvd.pvd.entity.ItemSale;
 import com.matheusmt.pvd.pvd.entity.Product;
 import com.matheusmt.pvd.pvd.entity.Sale;
 import com.matheusmt.pvd.pvd.entity.User;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -95,7 +94,7 @@ public class SaleService {
         }
     }
 
-    private List<ItemSale> getItemSale(List<ProductDTO> items) {
+    private List<ItemSale> getItemSale(List<ProductSaleDTO> items) {
         return items.stream().map(item ->{
             Product product = new Product();
             product = iProductRepository.getReferenceById(item.getProductid());

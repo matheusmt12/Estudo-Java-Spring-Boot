@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity insert(@Valid @RequestBody User user) {
+    public ResponseEntity insert(@Valid @RequestBody UserDTO user) {
         try {
             user.setEnabled(true);
             return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
@@ -44,10 +44,9 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity update(@Valid @RequestBody User user) {
+    public ResponseEntity update(@Valid @RequestBody UserDTO user) {
         try {
-            UserDTO userDto = userService.findById(user.getId());
-            return new ResponseEntity<>(userDto,HttpStatus.OK);
+            return new ResponseEntity<>(userService.update(user),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
