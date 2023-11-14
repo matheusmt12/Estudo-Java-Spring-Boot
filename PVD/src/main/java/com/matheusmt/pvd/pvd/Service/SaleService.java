@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -45,8 +46,23 @@ public class SaleService {
         return SaleInfoDTO.builder()
                 .username(sale.getUser().getName())
                 .date(sale.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
-                .products(getProoductsInfo(sale.getItemSales())).build();
+                .products(getProoductsInfo(sale.getItemSales()))
+                .price(getPrice(sale.getItemSales())).build();
+    }
 
+    private BigDecimal getPrice(List<ItemSale> itemSales) {
+        if(CollectionUtils.isEmpty(itemSales)){
+            throw new NoItemException("Não ha itens disponível");
+        }
+        BigDecimal price = BigDecimal.ZERO;
+
+        for(ItemSale item : itemSales){
+            BigDecimal total = item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getProduct().getQuantity()));
+            price = price.add(total);
+
+        }
+        System.out.println("Valor final " + price);
+        return  price;
     }
 
     private List<ProductDTOInfo> getProoductsInfo(List<ItemSale> itemSales) {
