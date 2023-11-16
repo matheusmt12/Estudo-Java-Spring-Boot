@@ -3,6 +3,7 @@ package com.matheusmt.pvd.pvd.Service;
 import com.matheusmt.pvd.pvd.DTO.UserDTO;
 import com.matheusmt.pvd.pvd.Exceptions.NoItemException;
 import com.matheusmt.pvd.pvd.Repository.IUserRepository;
+import com.matheusmt.pvd.pvd.Security.SecurityConfig;
 import com.matheusmt.pvd.pvd.entity.User;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -24,12 +25,16 @@ public class UserService {
 
     public List<UserDTO> findAll(){
         return iUserRepository.findAll().stream().map(user ->
-                new UserDTO(user.getId(), user.getName(),user.isEnabled())).collect(Collectors.toList());
+                new UserDTO(user.getId(), user.getName(),user.getUsername(), user.getPassword(),
+                        user.isEnabled())).collect(Collectors.toList());
     }
 
 
     @Transactional
     public User save(UserDTO userDto){
+
+
+        userDto.setPassword(SecurityConfig.BCryptPassaword().encode(userDto.getPassword()));
 
         User user = new User();
         user.setEnabled(user.isEnabled());
@@ -40,6 +45,9 @@ public class UserService {
 
     @Transactional
     public UserDTO update(UserDTO user){
+
+        user.setPassword(SecurityConfig.BCryptPassaword().encode(user.getPassword()));
+
         User save = mapper.map(user,User.class);
 
         save.setId(user.getId());
@@ -52,7 +60,7 @@ public class UserService {
             }
 
         save = iUserRepository.save(save);
-        return new UserDTO(save.getId(), save.getName(),save.isEnabled());
+        return new UserDTO(save.getId(), save.getName(), save.getUsername(), save.getPassword(), save.isEnabled());
     }
 
     @Transactional
@@ -64,7 +72,7 @@ public class UserService {
         Optional<User> opt = iUserRepository.findById(id);
         if (opt.isPresent()){
             User user = opt.get();
-             return new UserDTO(user.getId(), user.getName(),user.isEnabled());
+             return new UserDTO(user.getId(), user.getName(), user.getUsername(), user.getPassword(),user.isEnabled());
         }else{
             throw new NoItemException("O Usuario não foi encontrado");
         }
