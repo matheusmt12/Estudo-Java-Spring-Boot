@@ -34,11 +34,13 @@ public class UserService {
     public User save(UserDTO userDto){
 
 
-        userDto.setPassword(SecurityConfig.BCryptPassaword().encode(userDto.getPassword()));
+        userDto.setPassword(SecurityConfig.passwordEncoder().encode(userDto.getPassword()));
 
         User user = new User();
         user.setEnabled(user.isEnabled());
         user.setName(userDto.getName());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
         iUserRepository.save(user);
         return user;
     }
@@ -46,7 +48,7 @@ public class UserService {
     @Transactional
     public UserDTO update(UserDTO user){
 
-        user.setPassword(SecurityConfig.BCryptPassaword().encode(user.getPassword()));
+        user.setPassword(SecurityConfig.passwordEncoder().encode(user.getPassword()));
 
         User save = mapper.map(user,User.class);
 
@@ -76,6 +78,12 @@ public class UserService {
         }else{
             throw new NoItemException("O Usuario não foi encontrado");
         }
+
+    }
+
+    public User getByUsername(String username){
+
+        return iUserRepository.findUserByUsername(username);
 
     }
 

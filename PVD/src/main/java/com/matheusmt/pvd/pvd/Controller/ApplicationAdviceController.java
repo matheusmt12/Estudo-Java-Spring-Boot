@@ -4,7 +4,9 @@ package com.matheusmt.pvd.pvd.Controller;
 import com.matheusmt.pvd.pvd.DTO.ResponseDTO;
 import com.matheusmt.pvd.pvd.Exceptions.InvaledOperationException;
 import com.matheusmt.pvd.pvd.Exceptions.NoItemException;
+import com.matheusmt.pvd.pvd.Exceptions.PassWordNotFound;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,6 +42,18 @@ public class ApplicationAdviceController {
 
         });
         return new ResponseDTO(erros);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseDTO handleUserNameNotFoundException(UsernameNotFoundException exception){
+        return new ResponseDTO(exception.getMessage());
+    }
+
+    @ExceptionHandler(PassWordNotFound.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseDTO handlePassWordNorFound(PassWordNotFound exception){
+        return new ResponseDTO(exception.getMessage());
     }
 
 }

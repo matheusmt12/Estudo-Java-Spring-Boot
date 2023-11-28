@@ -23,7 +23,7 @@ public class User {
     @NotBlank(message = "o campo username é necessario")
     private String username;
 
-    @Column(length = 45,nullable = false)
+    @Column(length = 45,nullable = false, unique = true)
     @NotBlank(message = "O campo password é necessario")
     private String password;
 
